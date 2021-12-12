@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS plant_pot;
 DROP TABLE IF EXISTS location;
 DROP TABLE IF EXISTS repository;
+DROP TABLE IF EXISTS history;
 
 
 CREATE TABLE plant_pot (
@@ -26,4 +27,14 @@ CREATE TABLE repository(
     ph_level FLOAT,
     FOREIGN KEY(location_id) REFERENCES location(id),
     FOREIGN KEY(plant_pot_id) REFERENCES plant_pot(id)
+);
+
+CREATE TABLE history(
+    id INTEGER primary key AUTOINCREMENT,
+    repository_id INTEGER,
+    time TEXT,
+    water_level INTEGER,
+    ph_level FLOAT,
+    temperature INT,
+    FOREIGN KEY(repository_id) REFERENCES repository(id)
 );

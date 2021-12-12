@@ -47,7 +47,10 @@ def select_all_locations():
 
 def select_all_from_repo():
     db = get_db()
-    res = db.execute("SELECT repository.*, location.name, plant_pot.name, plant_pot.min_ph_level, plant_pot.max_ph_level FROM repository LEFT JOIN location ON repository.location_id = location.id LEFT JOIN plant_pot ON repository.plant_pot_id = plant_pot.id").fetchall()
+    res = db.execute("SELECT repository.*, location.name, plant_pot.name, plant_pot.min_ph_level, "
+                     "plant_pot.max_ph_level "
+                     "FROM repository LEFT JOIN location ON repository.location_id = location.id "
+                     "LEFT JOIN plant_pot ON repository.plant_pot_id = plant_pot.id").fetchall()
     lis = None
     if res is not None:
         lis = []
@@ -60,7 +63,7 @@ def select_all_from_repo():
 def get_location_temperature(lid: int):
     db = get_db()
     res = db.execute(f"SELECT max_temperature FROM location WHERE id = {lid}").fetchone()
-    return res[0] #+ random.randint(1, 4)
+    return res[0]  # + random.randint(1, 4)
 
 
 def add_item_to_repo(loc_id, plant_id):
@@ -80,17 +83,25 @@ def add_new_location(name, temp):
     db.execute(f"INSERT INTO location (name, max_temperature) VALUES ('{name}', {temp})")
     db.commit()
 
+
 def add_new_type_plant(name, max_w, min_p, max_p):
     db = get_db()
-    db.execute(f"INSERT INTO plant_pot (name, max_water_amount, min_ph_level, max_ph_level) VALUES ('{name}', {max_w}, {min_p}, {max_p})")
+    db.execute(
+        f"INSERT INTO plant_pot (name, max_water_amount, min_ph_level, max_ph_level) VALUES ('{name}', {max_w}, {min_p}, {max_p})")
     db.commit()
 
 
 def update_plant_and_temp(rid, moist_level, ph, lid, temp, time):
     db = get_db()
+    # Update the latest information
     db.execute(f"UPDATE repository SET water_level = {moist_level}, ph_level = {ph}, time = '{time}' WHERE id = {rid}")
     db.commit()
+    # Update the latest temperature
     db.execute(f"UPDATE location SET max_temperature = {temp} WHERE id = {lid}")
+    db.commit()
+    # Keep track of history
+    db.execute(f"INSERT INTO history (repository_id, time, water_level, ph_level, temperature) "
+               f"VALUES ({rid}, '{time}', {moist_level}, {ph}, {temp})")
     db.commit()
 
 
@@ -99,8 +110,52 @@ def get_a_plant_from_repo(rid):
     res = db.execute(f"SELECT repository.*, plant_pot.min_ph_level, plant_pot.max_ph_level, plant_pot.max_water_amount "
                      f"FROM repository LEFT JOIN plant_pot ON repository.plant_pot_id = plant_pot.id "
                      f"WHERE repository.id = {rid}").fetchone()
-    print(res[4], res[8])
     return Repository(res[0], res[3], res[4], res[5], None, None, res[6], res[7], res[8])
+
+
+def get_data_for_init():
+    db = get_db()
+    res = db.execute("SELECT repository.id, location.id, location.name, plant_pot.name FROM repository "
+                     "LEFT JOIN location ON repository.location_id = location.id "
+                     "LEFT JOIN plant_pot ON plant_pot.id = repository.plant_pot_id").fetchall()
+
+    lis = None
+    if res is not None:
+        lis = []
+        for p in res:
+            print(p[1], p[2])
+            if len(lis) != 0:
+                flag = True
+                for dic in lis:
+                    if dic.get("location_id") == p[1]:
+                        flag = False
+                        dic["num_instances"] += 1
+                        dic["instances_ids"].append(p[0])
+                        dic["list_of_pics"].append("pics/" + p[3] + ".jpg")
+                if flag:
+                    lis.append(
+                        {"location_id": p[1],
+                         "location_name": p[2],
+                         "num_instances": 1,
+                         "instances_ids": [p[0]],
+                         "list_of_pics": ["pics/" + p[3] + ".jpg"]}
+                    )
+            else:
+                lis.append(
+                    {"location_id": p[1],
+                     "location_name": p[2],
+                     "num_instances": 1,
+                     "instances_ids": [p[0]],
+                     "list_of_pics": ["pics/" + p[3] + ".jpg"]}
+                )
+
+    return lis
+
+
+def get_history():
+    db = get_db()
+    res = db.execute("SELECT * FROM history").fetchall()
+    return res
 
 
 def close_db(e=None):
