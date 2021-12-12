@@ -14,5 +14,11 @@ def send_sensor_data():
     return resp.json()
 
 
+def get_data_for_init():
+    resp = requests.get(base_url + "/init_sim")
+    return resp.json()
+
+
 if __name__ == "__main__":
     print(send_sensor_data())
+    # print(get_data_for_init())

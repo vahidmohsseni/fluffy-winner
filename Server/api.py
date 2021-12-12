@@ -16,6 +16,8 @@ from Server.db import add_new_location
 from Server.db import add_new_type_plant
 from Server.db import update_plant_and_temp
 from Server.db import get_a_plant_from_repo
+from Server.db import get_data_for_init
+from Server.db import get_history
 from Server.helper import MyEncoder
 
 bp = Blueprint('api', __name__)
@@ -23,15 +25,7 @@ bp = Blueprint('api', __name__)
 
 @bp.route("/")
 def index():
-    res = select_all_plants()
-    if res:
-        resp = Response(json.dumps(res, cls=MyEncoder), 200)
-        resp.headers["Content-Type"] = "application/json"
-        return resp
-
-    resp = Response("{\"status\": \"not found\"}", 404)
-    resp.headers["Content-Type"] = "application/json"
-    return resp
+    return render_template("index.html", history=get_history())
 
 
 # keys: ["location_id", "plant_id", "moisture_level", "ph_level", "temperature"]
@@ -110,6 +104,19 @@ def add_new_type_of_plant():
         return redirect("/admin")
     else:
         return render_template("addNewPlant.html")
+
+
+@bp.route("/init_sim", methods=["GET"])
+def initial_simulation():
+    resp = {"num_locations": 0,
+            "locations_data": []}
+    data = get_data_for_init()
+    if data:
+        for i in data:
+            resp["num_locations"] += 1
+            resp["locations_data"].append(i)
+
+    return jsonify(resp)
 
 
 @bp.route("/loctmp", methods=["GET"])
