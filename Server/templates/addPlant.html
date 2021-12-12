@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Plant</title>
+</head>
+<style>
+    p, label{
+        font-size: large;
+        font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    }
+    
+    input[type=radio] {
+        width: 18px;
+        height: 18px;
+    }
+
+</style>
+<body>
+<div>
+    <h2>Add New Plant to a Location</h2>
+    <form method="post" style="background-color: #8fbca3; width: 40%; border: 1px solid black">
+        <div style="border: 1px solid black" ><p>Choose a Location:</p>
+            {% for loc in locations %}
+            <input id={{ loc.name }} type="radio" name="location_id" value={{ loc.id }} required>
+            <label for={{ loc.name }}>{{ loc.name }}</label><br>
+            {% endfor %}
+        </div>
+
+        <div style="border: 1px solid black"><p>Choose Plant Type:</p>
+            {% for plant in plants %}
+            <input id={{ plant.name }} type="radio" name="plant_id" value={{ plant.id }} required>
+            <label for={{ plant.name }}>{{ plant.name }}</label><br>
+            {% endfor %}
+        </div>
+        <br><br><br>
+        <span style="">
+            <input type="submit" value="Submit" style="font-size: large">
+            <input type="reset" style="font-size: large">
+        </span>
+    </form>
+</div>
+</body>
+</html>

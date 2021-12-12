@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+    </script>
+</head>
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+th {
+    color: blueviolet;
+}
+table{
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+h4 {
+    color: brown;
+}
+</style>
+
+
+
+<body>
+
+<div>
+    <h2>Management Panel</h2>
+    <div>
+        <h4>Table of locations</h4>
+        <table style="width: 30%">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Temperature</th>
+            </tr>
+            {% for loc in locations %}
+            <tr>
+                <td>{{  loc.id  }}</td>
+                <td>{{  loc.name  }}</td>
+                <td>
+                    <div id="{{ "t3" ~ loc.id ~ "" }}">{{  loc.max_temperature  }}</div>
+                    <script type='text/javascript'>
+                      var {{ "table" ~ loc.id ~ "" }} = $('{{ "#t3" ~ loc.id ~ "" }}');
+                     // refresh every 5 seconds
+                     var refresher = setInterval(function(){
+                       {{ "table" ~ loc.id ~ "" }}.load("{{ "/loctmp?id=" ~ loc.id ~ "" }}");
+                     }, 5000);
+                     setTimeout(function() {
+                       clearInterval(refresher);
+                     }, 1800000);
+                    </script>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <button><a href="/add_location">Add New Location</a></button>
+        </div>
+    </div>
+
+    <div>
+        <h4>Types of Plants</h4>
+        <table style="width: 35%">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Water</th>
+                <th>Min Ph</th>
+                <th>Max Ph</th>
+            </tr>
+            {% for ty in types %}
+            <tr>
+                <td>{{ ty.id }}</td>
+                <td>{{ ty.name }}</td>
+                <td>{{ ty.max_water_amount }}</td>
+                <td>{{ ty.min_ph_level }}</td>
+                <td>{{ ty.max_ph_level }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <button><a href="/add_plant">Add New Type of Plant</a></button>
+        </div>
+    </div>
+
+    <div>
+        <h4>Table of Plants</h4>
+        <table style="width: 50%">
+            <tr>
+                <th>ID</th>
+                <th>Type of Plant</th>
+                <th>Location</th>
+                <th>Last Water Info</th>
+                <th>PH-status</th>
+                <th>Time</th>
+                <th style="color: darkred">REMOVE</th>
+            </tr>
+            {% for plant in repo %}
+            <tr>
+                <td>{{  plant.id  }}</td>
+                <td>{{  plant.plant_pot  }}</td>
+                <td>{{  plant.location  }}</td>
+                <td>{{  plant.water_level  }}</td>
+                <td>{{  plant.ph_level  }}</td>
+                <td>{{  plant.time  }}</td>
+                <td style="align-content: center"><form method="POST" action={{ "/remove_pot?id=" ~ plant.id ~ "" }}>
+                    <input type="submit" onclick="return confirm('Are you sure?')" value="delete!" style="color: darkred"/>
+                </form></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <button><a href="/add_plant_to_location">Add New Plant</a></button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

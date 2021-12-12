@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Location</title>
+</head>
+<body>
+        <div style="width: 30%">
+            <h3>Add a New Location</h3>
+            <form method="post" action="/add_location">
+                <label for="name" style="margin-right: 5em">name</label>
+                <input id="name" name="name" type="text" required >
+                <br><br>
+                <label for="max_temperature" style="margin-right: 2.4em">temperature</label>
+                <input id="max_temperature" name="max_temperature" type="number" required >
+                <br><br>
+                <input value="Submit!" type="submit">
+                <input type="reset">
+            </form>
+        </div>
+</body>
+</html>

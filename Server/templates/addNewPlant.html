@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">pass
+    <title>Add New Type for Plant</title>
+</head>
+<body>
+        <div style="width: 30%">
+            <h3>Add a New Type for Plant</h3>
+            <form method="post" action="/add_plant">
+                <label for="name" style="margin-right: 3em">name</label>
+                <input id="name" name="name" type="text" required >
+                <br><br>
+                <label for="max_water_amount" style="margin-right: 2.9em">water</label>
+                <input id="max_water_amount" name="max_water_amount" type="number" required >
+                <br><br>
+                <label for="min_ph_level" style="margin-right: 2.4em">min ph</label>
+                <input id="min_ph_level" name="min_ph_level" type="text" required >
+                <br><br>
+                <label for="max_ph_level" style="margin-right: 2.4em">max ph</label>
+                <input id="max_ph_level" name="max_ph_level" type="text" required >
+                <br><br>
+                <input value="Submit!" type="submit">
+                <input type="reset">
+            </form>
+        </div>
+</body>
+</html>
