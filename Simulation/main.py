@@ -3,7 +3,7 @@ import sys
 import random
 import requests
 port = 5000
-base_url = 'https://oulu-iot.herokuapp.com/'
+base_url = 'http://iot.vahid.click/'
 
 
 class MainWindow(QtWidgets.QMainWindow):
