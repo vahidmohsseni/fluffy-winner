@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.start_layout = QtWidgets.QVBoxLayout()
 
         # define welcome message
-        self.start_layout_message = QtWidgets.QLabel('Welcome\nto\nSmart watering system!')
+        self.start_layout_message = QtWidgets.QLabel('\n\nWelcome\nto\nSmart watering system\nsimulator!')
         self.start_layout_message.setStyleSheet('color: purple')
         self.start_layout_message.setFont(QtGui.QFont('Arial', 30))
         self.start_layout_message.setAlignment(QtCore.Qt.AlignCenter)
@@ -208,7 +208,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.change_temp_timer.start(self.change_temp_timer_period)
 
     def init_ui(self):
-        self.setWindowTitle('Smart watering system')
+        self.setWindowTitle('Smart watering system simulator')
         self.setGeometry(1200, 200, 900, 900)
         self.setCentralWidget(self.main_widget)
 
