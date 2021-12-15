@@ -208,7 +208,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.change_temp_timer.start(self.change_temp_timer_period)
 
     def init_ui(self):
-        self.setWindowTitle('Smart watering system simulator')
+        self.setWindowTitle('Smart irrigation system simulator')
         self.setGeometry(1200, 200, 900, 900)
         self.setCentralWidget(self.main_widget)
 
