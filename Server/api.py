@@ -134,7 +134,7 @@ def locations_tmp():
 
 def send_email(message):
     i = random.randint(1, 20)
-    if i <= 1:
+    if i <= 2:
         base_url = "http://127.0.0.1:" + PORT
         resp = requests.get(base_url + f"/mail?msg={message}")
         return resp
