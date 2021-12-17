@@ -274,7 +274,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for i in range(self.num_locations):
             for j in range(self.locations[i]['num_instances']):
                 self.locations[i]['moist_sensors_values'][j].setText(str(random.randint(30, 60))+' %')
-                self.locations[i]['ph_sensors_values'][j].setText(str(random.randint(0, 14)))
+                self.locations[i]['ph_sensors_values'][j].setText(str(random.randint(4, 9)))
 
     def refresh_app(self):
         self.main_timer.stop()
