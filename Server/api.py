@@ -1,10 +1,14 @@
 import json
 import time
+import os
+import random
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Response
 )
 from werkzeug.exceptions import abort
+
+import requests
 
 from Server.db import select_all_plants
 from Server.db import select_all_locations
@@ -22,6 +26,8 @@ from Server.helper import MyEncoder
 
 bp = Blueprint('api', __name__)
 
+PORT = str(int(os.environ.get('PORT', 5000)))
+
 
 @bp.route("/")
 def index():
@@ -35,7 +41,6 @@ def read_sensor():
     if request.method == "POST":
         if all(k in request.form.keys() for k in ["location_id",
                                                   "plant_id", "moisture_level", "ph_level", "temperature"]):
-
             lid = request.form["location_id"]
             rid = request.form["plant_id"]
             water = request.form["moisture_level"]
@@ -45,6 +50,9 @@ def read_sensor():
             update_plant_and_temp(rid, water, ph, lid, temp, ti)
             plant = get_a_plant_from_repo(rid)
 
+            if plant.ph_level != "GOOD":
+                send_email(f"\n\npH level for plant {rid} is {plant.ph_level}")
+
             return jsonify({"status": "ok", "needs_water": plant.needs_water, "ph_stat": plant.ph_level})
 
     return "salam"
@@ -53,7 +61,6 @@ def read_sensor():
 @bp.route("/admin", methods=['GET', 'POST'])
 def admin_page():
     if request.method == "GET":
-
         return render_template("admin.html",
                                locations=select_all_locations(),
                                types=select_all_plants(),
@@ -124,3 +131,11 @@ def locations_tmp():
     if request.method == "GET":
         return str(get_location_temperature(request.args["id"]))
 
+
+def send_email(message):
+    i = random.randint(1, 20)
+    if i <= 1:
+        base_url = "http://127.0.0.1:" + PORT
+        resp = requests.get(base_url + f"/mail?msg={message}")
+        return resp
+    return 0

@@ -2,13 +2,14 @@ import requests
 
 port = 5000
 base_url = "http://localhost:" + str(port)
+# base_url = "https://oulu-iot.herokuapp.com/"
 
 
 def send_sensor_data():
     data = {"location_id": 1,
             "plant_id": 1,
             "moisture_level": 40,
-            "ph_level": 6.5,
+            "ph_level": 6,
             "temperature": 19}
     resp = requests.post(base_url + "/sensor", data=data)
     return resp.json()

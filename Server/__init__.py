@@ -1,6 +1,9 @@
 import os
 
-from flask import Flask
+from flask import Flask, request
+from flask_mail import Mail, Message
+
+from Server.info import username, passw
 
 
 def create_app(test_config=None):
@@ -38,6 +41,24 @@ def create_app(test_config=None):
     from . import api
     app.register_blueprint(api.bp)
     app.add_url_rule("/", endpoint="index")
+
+    app.config['MAIL_SERVER'] = 'mail.mohsseni.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = username
+    app.config['MAIL_PASSWORD'] = passw
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    email = Mail(app)
+
+    @app.route("/mail")
+    def mail():
+        if request.method == "GET":
+            if "msg" in request.args:
+                message = request.args["msg"]
+                msg = Message('Warning from IoT Project', sender=username, recipients=['vahid.mohsseni@student.oulu.fi'])
+                msg.body = "Hey Admin, \n " + message + "\n\n end of message!"
+                email.send(msg)
+                return "Message sent!"
 
     return app
 
